@@ -1,0 +1,53 @@
+/* Triple User Table */
+CREATE TABLE TripleUser
+(
+	UserID	VARCHAR(50) PRIMARY KEY
+);
+
+/* Triple Place Table */
+CREATE TABLE Place
+(
+	PlaceID	VARCHAR(50) PRIMARY KEY
+);
+
+/* Triple Review Table */
+CREATE TABLE Review
+(
+	ReviewID		VARCHAR(50) PRIMARY KEY,
+    Content			VARCHAR(200) NOT NULL,
+	UserID			VARCHAR(50) NOT NULL,
+    PlaceID			VARCHAR(50) NOT NULL,
+    Bonus			boolean DEFAULT(FALSE) NOT NULL,
+    CreateDate		DATETIME DEFAULT(CURRENT_TIMESTAMP),
+    UpdateDate		DATETIME DEFAULT(CURRENT_TIMESTAMP),
+    CONSTRAINT FK_UtripleuserSER_REVIEW_USERID	FOREIGN KEY (UserID) REFERENCES TripleUser(UserID),
+    CONSTRAINT FK_PLACE_REVIEW_USERID	FOREIGN KEY (PlaceID) REFERENCES Place(PlaceID)
+);
+
+/* Triple AttachedPhoto Table */
+CREATE TABLE AttachedPhoto
+(
+	AttachedPhotoIDS	VARCHAR(50) PRIMARY KEY,
+    ReviewID			VARCHAR(50) NOT NULL,
+    CreateDate			DATETIME DEFAULT(CURRENT_TIMESTAMP),
+    UpdateDate			DATETIME DEFAULT(CURRENT_TIMESTAMP),
+    CONSTRAINT FK_REVIEW_PHOTO_REVIEWID	FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID)
+);
+
+/* Triple Point History Table */
+CREATE TABLE PointHistory
+(
+	PointID				VARCHAR(50) PRIMARY KEY,
+    PointEarned			INT DEFAULT 0 NOT NULL,
+    Reason				VARCHAR(100) NOT NULL,
+    UserID				VARCHAR(50) NOT NULL,
+    ReviewID			VARCHAR(50) NOT NULL,
+    PlaceID				VARCHAR(50) NOT NULL,
+    CreateDate			DATETIME DEFAULT(CURRENT_TIMESTAMP),
+    INDEX IdxPoint (UserID, ReviewID)
+);
+
+/* TEST DATA */
+USE triple_db;
+INSERT INTO TripleUser(UserID) VALUE('3ede0ef2-92b7-4817-a5f3-0c575361f745');
+INSERT INTO Place(PlaceID) VALUE('2e4baf1c-5acb-4efb-a1af-eddada31b00f');
