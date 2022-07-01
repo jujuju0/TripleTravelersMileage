@@ -73,8 +73,7 @@ class ReviewPointControllerTest {
 
         // then
         resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$.success").value("true"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.type").value("리뷰 이벤트"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
 

@@ -15,10 +15,7 @@ public class ReviewPointController {
     @PostMapping("/events")
     private ResponseEntity ReviewEvents(@RequestBody ReviewEventRequest event)
     {
-        ResultResponse _res = new ResultResponse();
-        _res.setSuccess(true);
-        _res.setType("리뷰 이벤트");
-        _res.setResult(reviewPointService.ReviewEvents(event));
+        ResultResponse _res = reviewPointService.ReviewEvents(event);
         return  ResponseEntity.ok(_res);
     }
 

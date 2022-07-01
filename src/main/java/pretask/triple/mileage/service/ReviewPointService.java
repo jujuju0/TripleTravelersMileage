@@ -26,7 +26,7 @@ public class ReviewPointService {
     private final PointHistoryRepository pointHistoryRepository;
     private final PlaceRepository placeRepository;
 
-    public String ReviewEvents(ReviewEventRequest event)
+    public ResultResponse ReviewEvents(ReviewEventRequest event)
     {
         switch (event.getAction())
         {
@@ -44,7 +44,11 @@ public class ReviewPointService {
             }
             default ->
             {
-                return "등록된 Action 값이 아닙니다.";
+                ResultResponse _res = new ResultResponse();
+                _res.setType("리뷰 이벤트");
+                _res.setSuccess(false);
+                _res.setResult("등록된 Action 값이 아닙니다.");
+                return _res;
             }
         }
     }
@@ -55,34 +59,48 @@ public class ReviewPointService {
     }
 
     @Transactional
-    private String AddReview(ReviewEventRequest event)
+    private ResultResponse AddReview(ReviewEventRequest event)
     {
+        ResultResponse _res = new ResultResponse();
         try
         {
+            _res.setType("리뷰 이벤트");
             ReviewEntity review;
             UserEntity userEntity = userRepository.findById(event.getUserId()).orElseThrow(()-> new NullPointerException("등록된 유저가 없습니다."));
             PlaceEntity placeEntity = placeRepository.findById(event.getPlaceId()).orElseThrow(()-> new NullPointerException("등록된 장소가 없습니다."));
 
             if(!reviewRepository.findById(event.getReviewId()).isEmpty())
             {
-                return "이미 존재하는 Review ID 입니다.";
+                _res.setSuccess(false);
+                _res.setResult("이미 존재하는 Review ID 입니다.");
+                return _res;
             }
 
             for(String id : attachedPhotoRepository.findAllIds())
             {
                 for(String photoId : event.getAttachedPhotoIds())
                 {
-                    if(id.equals(photoId)) return "이미 존재하는 AttachedPhoto ID 입니다.";
+                    if(id.equals(photoId))
+                    {
+                        _res.setSuccess(false);
+                        _res.setResult("이미 존재하는 AttachedPhoto ID 입니다.");
+                        return _res;
+                    }
                 }
             }
 
-            if (IsExist(event.getUserId(), event.getPlaceId())) {
-                return "해당 장소에 이미 리뷰를 등록한 유저입니다.";
+            if (IsExist(event.getUserId(), event.getPlaceId()))
+            {
+                _res.setSuccess(false);
+                _res.setResult("해당 장소에 이미 리뷰를 등록한 유저입니다.");
+                return _res;
             }
 
             if (Objects.isNull(event.getContent()) || event.getContent().length() == 0)
             {
-                return "작성 된 리뷰 내용이 없습니다.";
+                _res.setSuccess(false);
+                _res.setResult("작성 된 리뷰 내용이 없습니다.");
+                return _res;
             }
             else
             {
@@ -122,28 +140,38 @@ public class ReviewPointService {
                 AddPointHistory(ActionEnum.ADD, event, "Photo Review", ADD_POINT);
             }
 
-            return "리뷰가 등록되었습니다.";
+            _res.setSuccess(true);
+            _res.setResult("리뷰가 등록되었습니다.");
+            return _res;
         }
         catch (Exception ex)
         {
-            return ex.getMessage();
+            _res.setSuccess(false);
+            _res.setResult(ex.getMessage());
+            return _res;
         }
     }
 
     @Transactional
-    private String ModReview(ReviewEventRequest event)
+    private ResultResponse ModReview(ReviewEventRequest event)
     {
+        ResultResponse _res = new ResultResponse();
         try
         {
+            _res.setType("리뷰 이벤트");
             ReviewEntity review = reviewRepository.findById(event.getReviewId()).orElseThrow(() -> new NullPointerException("등록된 리뷰가 없습니다."));
             if(!review.getUserEntity().getUserID().equals(event.getUserId()))
             {
-                return "리뷰를 등록한 작성자가 아닙니다.";
+                _res.setSuccess(false);
+                _res.setResult("리뷰를 등록한 작성자가 아닙니다.");
+                return _res;
             }
 
             if (Objects.isNull(event.getContent()) || event.getContent().length() == 0)
             {
-                return "작성 된 리뷰 내용이 없습니다.";
+                _res.setSuccess(false);
+                _res.setResult("작성 된 리뷰 내용이 없습니다.");
+                return _res;
             }
 
             List<AttachedPhotoEntity> attachedPhotoEntityList = attachedPhotoRepository.findByReviewId(event.getReviewId());
@@ -157,7 +185,12 @@ public class ReviewPointService {
                     {
                         for(String photoId : event.getAttachedPhotoIds())
                         {
-                            if(id.equals(photoId)) return "이미 존재하는 AttachedPhoto ID 입니다.";
+                            if(id.equals(photoId))
+                            {
+                                _res.setSuccess(false);
+                                _res.setResult("이미 존재하는 AttachedPhoto ID 입니다.");
+                                return _res;
+                            }
                         }
                     }
 
@@ -181,7 +214,12 @@ public class ReviewPointService {
                     {
                         for(String photoId : event.getAttachedPhotoIds())
                         {
-                            if(id.equals(photoId)) return "이미 존재하는 AttachedPhoto ID 입니다.";
+                            if(id.equals(photoId))
+                            {
+                                _res.setSuccess(false);
+                                _res.setResult("이미 존재하는 AttachedPhoto ID 입니다.");
+                                return _res;
+                            }
                         }
                     }
 
@@ -197,23 +235,32 @@ public class ReviewPointService {
             review.UpdateReview(event.getContent());
 
             reviewRepository.save(review);
-            return "리뷰가 수정되었습니다.";
+
+            _res.setSuccess(true);
+            _res.setResult("리뷰가 수정되었습니다.");
+            return _res;
         }
         catch (Exception ex)
         {
-            return ex.getMessage();
+            _res.setSuccess(false);
+            _res.setResult(ex.getMessage());
+            return _res;
         }
     }
 
     @Transactional
-    private String DeleteReview(ReviewEventRequest event)
+    private ResultResponse DeleteReview(ReviewEventRequest event)
     {
+        ResultResponse _res = new ResultResponse();
         try
         {
+            _res.setType("리뷰 이벤트");
             ReviewEntity review = reviewRepository.findById(event.getReviewId()).orElseThrow(() -> new NullPointerException("등록된 리뷰가 없습니다."));
             if(!review.getUserEntity().getUserID().equals(event.getUserId()))
             {
-                return "리뷰를 등록한 작성자가 아닙니다.";
+                _res.setSuccess(false);
+                _res.setResult("리뷰를 등록한 작성자가 아닙니다.");
+                return _res;
             }
 
             if(review.isBonus())
@@ -233,11 +280,15 @@ public class ReviewPointService {
 
             reviewRepository.delete(review);
 
-            return "리뷰가 삭제되었습니다.";
+            _res.setSuccess(true);
+            _res.setResult("리뷰가 삭제되었습니다.");
+            return _res;
         }
         catch (Exception ex)
         {
-            return ex.getMessage();
+            _res.setSuccess(false);
+            _res.setResult(ex.getMessage());
+            return _res;
         }
     }
 
@@ -262,7 +313,7 @@ public class ReviewPointService {
     {
         ResultResponse _res = new ResultResponse();
         _res.setSuccess(true);
-        _res.setType(userId + "님의 현재 누적 포인트 조회");
+        _res.setType(userId + "님의 현재 포인트 총점 조회");
         if(userRepository.findById(userId).isEmpty())
         {
             _res.setResult("등록되지 않은 유저입니다.");
