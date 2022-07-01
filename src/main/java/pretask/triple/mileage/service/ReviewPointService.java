@@ -312,15 +312,15 @@ public class ReviewPointService {
     public ResultResponse GetUserPoint(String userId)
     {
         ResultResponse _res = new ResultResponse();
-        _res.setSuccess(true);
         _res.setType(userId + "님의 현재 포인트 총점 조회");
         if(userRepository.findById(userId).isEmpty())
         {
+            _res.setSuccess(false);
             _res.setResult("등록되지 않은 유저입니다.");
         }
         else {
+            _res.setSuccess(true);
             _res.setResult(Objects.isNull(pointHistoryRepository.findMyPointByUserId(userId)) ? 0 : pointHistoryRepository.findMyPointByUserId(userId));
-
         }
         return _res;
     }
@@ -328,15 +328,16 @@ public class ReviewPointService {
     public ResultResponse GetUserPointDetail(String userId)
     {
         ResultResponse _res = new ResultResponse();
-        _res.setSuccess(true);
         _res.setType(userId + "님의 포인트 상세내역 조회");
 
         if(userRepository.findById(userId).isEmpty())
         {
+            _res.setSuccess(false);
             _res.setResult("등록되지 않은 유저입니다.");
         }
         else
         {
+            _res.setSuccess(true);
             _res.setResult(pointHistoryRepository.findByUserId(userId));
         }
         return _res;
