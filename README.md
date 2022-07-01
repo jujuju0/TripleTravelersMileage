@@ -17,7 +17,6 @@
 ## 실행방법
 
 #### **jar 파일 경로**
-
 \TripleTravelersMileage\build\libs\TripleTravelersMileage-0.0.1-SNAPSHOT.jar
 
 ```bash
@@ -26,30 +25,40 @@ cd {target}
 java -jar TripleTravelersMileage-0.0.1-SNAPSHOT.jar
 ```
 
-## API 명세
+## 테스트 케이스
 
-```text
-1. REVIEW EVENT
-   [API ID] http://localhost:8080/events
-   [METHOD] POST
-   [DETAIL] 리뷰 추가, 수정, 삭제 API
+![img.png](img.png)
 
-2. USER TOTAL POINT 조회
-   [API ID] http://localhost:8080/point/{userId}
-   [METHOD] GET
-   [DETAIL] 특정 유저의 현재 누적 포인트 조회 API
+## TRIPLE API 명세서
 
-3. USER POINT 상세 히스토리 조회
-   [API ID] http://localhost:8080/point/detail/{userId}
-   [METHOD] GET
-   [DETAIL] 특정 유저의 포인트 상세 내역 조회 API
-```
+1. 리뷰 이벤트 API 
+
+|**METHOD**|**요청 URL**|**DESCRIPTION**|**출력 포맷**|
+|:--------:|------------|---------------|:---------:|
+|POST|http://localhost:8080/events|리뷰 추가, 수정, 삭제 이벤트 발생시 포인트 적립/차감|JSON|
+
+2. 유저 토탈 포인트 조회 API
+
+|**METHOD**|**요청 URL**|**DESCRIPTION**|**출력 포맷**|
+|:--------:|------------|---------------|:---------:|
+|GET|http://localhost:8080/point/{userId}|특정 유저의 현재 누적 포인트 조회|JSON|
+
+3. 유저 포인트 내역 조회 API
+
+|**METHOD**|**요청 URL**|**DESCRIPTION**|**출력 포맷**|
+|:--------:|-------|---------------|:---------:|
+|GET|http://localhost:8080/point/detail/{userId}|특정 유저의 포인트 상세 내역 조회|JSON|
 
 ## DB 자료 경로
 * #### 테이블 생성 DDL 및 테스트 데이터
 
-    \TripleTravelersMileage\src\main\resources\DB\TripleDB.sql
+```text
+  \TripleTravelersMileage\src\main\resources\DB\TripleDB.sql
+```
 
 * #### E-R Diagram
 
-    \TripleTravelersMileage\src\main\resources\DB\TripleERD.PNG
+```text
+  \TripleTravelersMileage\src\main\resources\DB\TripleERD.PNG
+```
+

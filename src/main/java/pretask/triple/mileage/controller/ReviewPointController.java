@@ -23,22 +23,17 @@ public class ReviewPointController {
     }
 
     @GetMapping("/point/{userId}")
-    public ResponseEntity GetMyPoint(@PathVariable String userId)
+    public ResponseEntity GetUserPoint(@PathVariable String userId)
     {
         ResultResponse _res = new ResultResponse();
-        _res.setSuccess(true);
-        _res.setType(userId + "님의 현재 누적 포인트 조회");
-        _res.setResult(reviewPointService.GetMyPoint(userId));
+        _res = reviewPointService.GetUserPoint(userId);
         return  ResponseEntity.ok(_res);
     }
 
     @GetMapping("/point/detail/{userId}")
-    public ResponseEntity GetMyPointDetail(@PathVariable String userId)
+    public ResponseEntity GetUserPointDetail(@PathVariable String userId)
     {
-        ResultResponse _res = new ResultResponse();
-        _res.setSuccess(true);
-        _res.setType(userId + "님의 포인트 상세내역 조회");
-        _res.setResult(reviewPointService.GetMyPointDetail(userId));
+        ResultResponse _res = reviewPointService.GetUserPointDetail(userId);
         return ResponseEntity.ok(_res);
     }
 }

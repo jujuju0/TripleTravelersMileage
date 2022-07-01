@@ -9,4 +9,6 @@ import java.util.List;
 public interface AttachedPhotoRepository extends JpaRepository<AttachedPhotoEntity, String> {
     @Query(value = "SELECT * FROM AttachedPhoto WHERE ReviewID = :reviewID", nativeQuery = true)
     List<AttachedPhotoEntity> findByReviewId(String reviewID);
+    @Query(value = "SELECT AttachedPhotoIds FROM AttachedPhoto", nativeQuery = true)
+    List<String> findAllIds();
 }
