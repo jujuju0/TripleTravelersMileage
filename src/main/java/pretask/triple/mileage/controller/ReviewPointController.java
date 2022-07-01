@@ -22,8 +22,7 @@ public class ReviewPointController {
     @GetMapping("/point/{userId}")
     public ResponseEntity GetUserPoint(@PathVariable String userId)
     {
-        ResultResponse _res = new ResultResponse();
-        _res = reviewPointService.GetUserPoint(userId);
+        ResultResponse _res = reviewPointService.GetUserPoint(userId);
         return  ResponseEntity.ok(_res);
     }
 
