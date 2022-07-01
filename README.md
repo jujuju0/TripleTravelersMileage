@@ -17,6 +17,7 @@
 ## 실행방법
 
 #### **jar 파일 경로**
+
 \TripleTravelersMileage\build\libs\TripleTravelersMileage-0.0.1-SNAPSHOT.jar
 
 ```bash
